@@ -182,8 +182,16 @@ paths:
         - students
         - class-schedule
       description: >
-        Get a student's class schedule. If no 'term' parameter is provided,
-        active registrations for all terms will be returned.
+        Get a student's class schedule. If no 'term' parameter is provided, active registrations for
+        all terms will be returned. The resources returned at this endpoint should have a to-one
+        relationship with offeringAssociations, which have a to-one relationship with
+        educationOfferings, which have a to-one relationship with educations. JSON:API compound
+        documents are supported, so related resources can be included in the response using values
+        for `include` such as 'offeringAssociation', 'offeringAssociation.educationOffering', and
+        'offeringAssociation.educationOffering.education'. JSON:API sparse fieldsets are also
+        supported, so attributes of included resources can be limited by using query parameters such
+        as `fields[offeringAssociation]`, `fields[offeringAssociation.educationOffering], and
+        fields[offeringAssociation.educationOffering.education]
       operationId: getClassScheduleById
       parameters:
         - $ref: '#/parameters/term'
@@ -604,41 +612,51 @@ definitions:
                     description: Model Primitive Datatype = String. ...tbd (DerivedType property description)...
       attributes:
         properties:
+          # This information should come from educationOffering
           academicYear:
             description: Code value to identify the academic year for the term.
             type: string
             example: '1819'
+          # This information should come from educationOffering
           academicYearDescription:
             description: Short summary of the academic year for the term.
             type: string
             example: Academic Year 2018-19
+          # This information should come from educationOffering
           courseReferenceNumber:
             description: Uniquely identifies a course section for a given term.
             type: string
             example: '123456'
+          # This information should come from education
           courseSubject:
             description: Abbreviated course subject.
             type: string
             example: ECON
+          # This information should come from education
           courseSubjectDescription:
             description: Description of course subject.
             type: string
             example: Economics
+          # This information should come from education
           courseNumber:
             type: string
             example: '352'
+          # This information should come from education
           courseTitle:
             description: Title of the course.
             type: string
             example: Environmental Economics & Policy
+          # This information should come from educationOffering
           sectionNumber:
             description: The unique section of a specific course number.
             type: string
             example: '001'
+          # This information should come from educationOffering
           term:
             description: The term that this course is scheduled for.
             type: string
             example: '201901'
+          # This information should come from educationOffering
           termDescription:
             description: Description of the term.
             type: string
@@ -652,21 +670,26 @@ definitions:
             type: string
             example: A
             enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
+          # This information should come from education
           creditHours:
             description: Credit hours of the course.
             type: integer
             example: 3
+          # This information should come from offeringAssociation
           registrationStatus:
             description: The student's registration status for the course.
             type: string
             example: Web Registered
+          # This information should come from educationOffering
           gradingMode:
             description: The grading mode for the course.
             type: string
             example: Normal Grading Mode
+          # This information should come from education
           continuingEducation:
             description: Identifies whether the course is enrolled for continuing education credits.
             type: boolean
+          # This information should come from educationOffering
           faculty:
             description: Faculty and instructors associated with this course.
             type: array
@@ -688,6 +711,7 @@ definitions:
                   description: Indicates whether the faculty is the primary faculty for the course.
                   type: boolean
                   example: true
+          # This information should come from educationOffering
           meetingTimes:
             description: Weekly meeting times for the course.
             type: array
@@ -698,6 +722,7 @@ definitions:
                   type: string
                   format: date
                   example: '2018-09-20'
+                # This field is missing from educationOffering
                 beginTime:
                   description: The starting time of the meeting time for the course in 24 hour format.
                   type: string
@@ -707,31 +732,38 @@ definitions:
                   type: string
                   format: date
                   example: '2018-11-30'
+                # This field is missing from educationOffering
                 endTime:
                   description: The starting time of the meeting time for the course in 24 hour format.
                   type: string
                   example: '14:50:00'
+                # This field is missing from educationOffering
                 room:
                   description: Room where the meeting time meets.
                   type: string
                   example: '100'
+                # This field is missing from educationOffering
                 building:
                   description: The building abbreviation of the meeting time.
                   type: string
                   example: LINC
+                # This field is missing from educationOffering
                 buildingDescription:
                   description: The name of the building.
                   type: string
                   example: Learning Innovation Center
+                # This field is missing from educationOffering
                 campus:
                   description: Campus location of the meeting time.
                   type: string
                   example: Oregon State - Corvallis
+                # This field is missing from educationOffering
                 hoursPerWeek:
                   description: The amount of hours this meeting time meets per week.
                   type: number
                   format: float
                   example: 1.66
+                # This field is missing from educationOffering
                 creditHourSession:
                   description: Session credit hours for this meeting time.
                   type: integer
@@ -775,6 +807,7 @@ definitions:
                   description: Human readable schedule type for the course (agnostic of meeting times).
                   type: string
                   example: Lecture
+                # This field is missing from educationOffering
                 weeklySchedule:
                   description: |
                     Array of day abbreviations to represent which days of the week this meeting time occurs on.
