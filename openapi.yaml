@@ -190,8 +190,8 @@ paths:
         for `include` such as 'offeringAssociation', 'offeringAssociation.educationOffering', and
         'offeringAssociation.educationOffering.education'. JSON:API sparse fieldsets are also
         supported, so attributes of included resources can be limited by using query parameters such
-        as `fields[offeringAssociation]`, `fields[offeringAssociation.educationOffering], and
-        fields[offeringAssociation.educationOffering.education]
+        as `fields[offeringAssociation]`, `fields[offeringAssociation.educationOffering]`, and
+        `fields[offeringAssociation.educationOffering.education]`
       operationId: getClassScheduleById
       parameters:
         - $ref: '#/parameters/term'
