@@ -189,6 +189,8 @@ paths:
         - $ref: '#/parameters/term'
         - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/include'
       responses:
         '200':
           description: Successful response
@@ -368,6 +370,26 @@ parameters:
       academic breaks, the current term will be the current or the most future term. For example,
       during spring break, the current term will be the spring term.
     type: string
+  fields:
+    name: fields
+    in: query
+    description: To identify the range of fields that should be supplied in the response message.
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    allowEmptyValue: false
+  include:
+    name: include
+    in: query
+    description: A comma-separated list of related resources to include in the response. Each field
+      can be dot-separated to indicate nested relationships.
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    allowEmptyValue: false
 definitions:
   AcademicStatusResult:
     properties:
@@ -547,6 +569,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ClassScheduleResource'
+      included:
+        type: array
+        items:
+          type: object
   ClassScheduleResource:
     properties:
       id:
@@ -554,6 +580,28 @@ definitions:
       type:
         type: string
         enum: [class-schedule]
+      relationships:
+        type: object
+        properties:
+          offeringAssociation:
+            type: object
+            properties:
+              links:
+                type: object
+                properties:
+                  related:
+                    type: string
+                    format: uri
+                    example: '{host}{basePath}/offeringAssociations/{id}'
+              data:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum: [offeringAssociation]
+                  id:
+                    type: string
+                    description: Model Primitive Datatype = String. ...tbd (DerivedType property description)...
       attributes:
         properties:
           academicYear:
@@ -649,20 +697,20 @@ definitions:
                   description: The starting date of the meeting time schedule.
                   type: string
                   format: date
-                  example: 2018-09-20
+                  example: '2018-09-20'
                 beginTime:
                   description: The starting time of the meeting time for the course in 24 hour format.
                   type: string
-                  example: 14:00:00
+                  example: '14:00:00'
                 endDate:
                   description: The ending date of the meeting time schedule.
                   type: string
                   format: date
-                  example: 2018-11-30
+                  example: '2018-11-30'
                 endTime:
                   description: The starting time of the meeting time for the course in 24 hour format.
                   type: string
-                  example: 14:50:00
+                  example: '14:50:00'
                 room:
                   description: Room where the meeting time meets.
                   type: string
