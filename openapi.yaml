@@ -29,6 +29,8 @@ paths:
       parameters:
         - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
+        - $ref: '#/parameters/include'
+        - $ref: '#/parameters/fields'
       responses:
         '200':
           description: Successful response
@@ -559,6 +561,10 @@ definitions:
         $ref: '#/definitions/SelfLink'
       data:
         $ref: '#/definitions/StudentResource'
+      included:
+        type: array
+        items:
+          type: object
   AcademicStatusResult:
     properties:
       links:
