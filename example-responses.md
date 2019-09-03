@@ -413,7 +413,7 @@ This file contains some example responses for the EDU Students API adapted to fi
     ```json
     {
       "links": {
-        "self": "string"
+        "self": "https://api.v1.oregonstate.edu/v1/students/931234567"
       },
       "data": {
         "type": "student",
@@ -421,22 +421,22 @@ This file contains some example responses for the EDU Students API adapted to fi
         "relationships": {
           "academic-statuses": {
             "links": {
-              "related": "string"
+              "related": "https://api.v1.oregonstate.edu/v1/students/931234567/academic-statuses"
             }
           },
           "account-balance": {
             "links": {
-              "related": "string"
+              "related": "https://api.v1.oregonstate.edu/v1/students/931234567/account-balance"
             }
           },
           "account-transactions": {
             "links": {
-              "related": "string"
+              "related": "https://api.v1.oregonstate.edu/v1/students/931234567/account-transactions"
             }
           },
           "classification": {
             "links": {
-              "related": "string"
+              "related": "https://api.v1.oregonstate.edu/v1/students/931234567/classification"
             }
           },
           "class-schedules": {
@@ -447,7 +447,7 @@ This file contains some example responses for the EDU Students API adapted to fi
               }
             ],
             "links": {
-              "related": "string"
+              "related": "https://api.v1.oregonstate.edu/v1/students/931234567/class-schedule"
             }
           },
           "degrees": {
@@ -462,32 +462,32 @@ This file contains some example responses for the EDU Students API adapted to fi
               }
             ],
             "links": {
-              "related": "string"
+              "related": "https://api.v1.oregonstate.edu/v1/students/931234567/degrees"
             }
           },
           "dual-enrollments": {
             "links": {
-              "related": "string"
+              "related": "https://api.v1.oregonstate.edu/v1/students/931234567/dual-enrollments"
             }
           },
           "gpa": {
             "links": {
-              "related": "string"
+              "related": "https://api.v1.oregonstate.edu/v1/students/931234567/gpa"
             }
           },
           "grades": {
             "links": {
-              "related": "string"
+              "related": "https://api.v1.oregonstate.edu/v1/students/931234567/grades"
             }
           },
           "holds": {
             "links": {
-              "related": "string"
+              "related": "https://api.v1.oregonstate.edu/v1/students/931234567/holds"
             }
           },
           "work-study": {
             "links": {
-              "related": "string"
+              "related": "https://api.v1.oregonstate.edu/v1/students/931234567/work-study"
             }
           }
         }
@@ -499,11 +499,7 @@ This file contains some example responses for the EDU Students API adapted to fi
           "relationships": {
             "offeringAssociation": {
               "links": {
-                "related": "{host}{basePath}/offeringAssociations/{id}"
-              },
-              "data": {
-                "type": "offeringAssociation",
-                "id": "string"
+                "related": "https://api.v1.oregonstate.edu/v1/education/offeringAssociations?filter[personId]=931123456"
               }
             }
           },
@@ -553,9 +549,6 @@ This file contains some example responses for the EDU Students API adapted to fi
                 ]
               }
             ]
-          },
-          "links": {
-            "self": "string"
           }
         },
         {
