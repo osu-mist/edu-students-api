@@ -36,6 +36,10 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/StudentResult'
+        '403':
+          description: One or more resources are forbidden
+          schema:
+            $ref: '#/definitions/ErrorResult'
         '404':
           description: Resource not found
           schema:
@@ -231,6 +235,10 @@ paths:
             $ref: '#/definitions/ClassScheduleResult'
         '400':
           description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResult'
+        '403':
+          description: One or more resources are forbidden
           schema:
             $ref: '#/definitions/ErrorResult'
         '500':
