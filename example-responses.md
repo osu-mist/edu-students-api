@@ -1,9 +1,22 @@
-1. `GET /students/{osuId}/class-schedule`
+# Example Responses
+
+This file contains some example responses for the EDU Students API adapted to fit the
+[JSON:API](https://jsonapi.org/format/) specification.
+
+## Examples
+
+1.  A request to get the class schedules for a student without requesting any additional information.
+
+    The `relationships` objects only include a link which can be used to fetch the related
+    resources. `id` and `type` are not included so the API won't need to fetch related resource
+    information. This reduces the work required by the API.
+
+    `GET /students/{osuId}/class-schedule`
 
     ```json
     {
       "links": {
-        "self": "string"
+        "self": "https://api.v1.oregonstate.edu/v1/students/{osuId}/class-schedule"
       },
       "data": [
         {
@@ -12,11 +25,8 @@
           "relationships": {
             "offeringAssociation": {
               "links": {
-                "related": "https://api.v1.oregonstate.edu/v1/education/offeringAssociations/123"
-              },
-              "data": {
-                "type": "offeringAssociation",
-                "id": "string"
+                "related":
+                "https://api.v1.oregonstate.edu/v1/education/offeringAssociations?filter[personId]=931123456"
               }
             }
           },
@@ -66,24 +76,27 @@
                 ]
               }
             ]
-          },
-          "links": {
-            "self": "string"
           }
         }
-      ],
-      "included": [
-        {}
       ]
     }
     ```
 
-2. `GET /students/{osuId}/class-schedule?include=offeringAssociation`
+2.  A request to get the class schedules for a student along with the offering associations for each
+    class schedule.
+
+    This is a JSON:API compound document. All related resources included in the response will
+    appear in a flat, top-level array keyed by `included`. Due to JSON:API's "full linkage"
+    requirement with compound documents, all included resources must have their `type` and `id`
+    appear under another resource's `relationships` somewhere else in the response. So the class
+    schedule's `relationships` will list all `type` and `id` pairs.
+
+    `GET /students/{osuId}/class-schedule?include=offeringAssociation`
 
     ```json
     {
       "links": {
-        "self": "string"
+        "self": "https://api.v1.oregonstate.edu/v1/students/{osuId}/class-schedule"
       },
       "data": [
         {
@@ -92,7 +105,7 @@
           "relationships": {
             "offeringAssociation": {
               "links": {
-                "related": "https://api.v1.oregonstate.edu/v1/education/offeringAssociations/123"
+                "related": "https://api.v1.oregonstate.edu/v1/education/offeringAssociations?filter[personId]=931123456"
               },
               "data": {
                 "type": "offeringAssociation",
@@ -146,23 +159,20 @@
                 ]
               }
             ]
-          },
-          "links": {
-            "self": "string"
           }
         }
       ],
       "included": [
         {
           "type": "offeringAssociation",
-          "id": "string",
+          "id": "123",
           "meta": {
             "additionalProp1": {}
           },
           "relationships": {
             "educationOffering": {
               "links": {
-                "related": "{host}{basePath}/educationOfferings/{id}"
+                "related": "https://api.v1.oregonstate.edu/v1/education/offeringAssociations/123"
               },
               "data": {
                 "type": "educationOffering",
@@ -188,12 +198,30 @@
     }
     ```
 
-3. `GET /students/{osuId}/class-schedule?include=offeringAssociation.educationOffering.education`
+3.  A request to get:
+
+    1. the class schedules for a student
+    2. the offering associations for each class schedule
+    3. the education offerings for each offering association
+    4. the educations for each education offering.
+
+    This slightly more complex example shows how multiple, nested related resources can be included
+    in a single response. Each relationship name in `include` can be dot-separated to specify these
+    nested relationships. Again, due to JSON:API's "full linkage" requirement, all included resources
+    must be specified by some other resource in the response. In this context, this means that when a
+    nested related resource is included, all intermediate related resources also must be included. So
+    when `offeringAssociation.educationOffering.education` is specified, `offeringAssociation` and
+    `offeringAssociation.educationOffering` are indirectly specified as well.
+
+    _Note: JSON:API allows for giving nested relationships different names if there is a need to
+    include them without intermediate resources._
+
+    `GET /students/{osuId}/class-schedule?include=offeringAssociation.educationOffering.education`
 
     ```json
     {
       "links": {
-        "self": "string"
+        "self": "https://api.v1.oregonstate.edu/v1/students/{osuId}/class-schedule"
       },
       "data": [
         {
@@ -202,7 +230,7 @@
           "relationships": {
             "offeringAssociation": {
               "links": {
-                "related": "https://api.v1.oregonstate.edu/v1/education/offeringAssociations/123"
+                "related": "https://api.v1.oregonstate.edu/v1/education/offeringAssociations?filter[personId]=931123456"
               },
               "data": {
                 "type": "offeringAssociation",
@@ -256,9 +284,6 @@
                 ]
               }
             ]
-          },
-          "links": {
-            "self": "string"
           }
         }
       ],
@@ -272,7 +297,7 @@
           "relationships": {
             "educationOffering": {
               "links": {
-                "related": "{host}{basePath}/educationOfferings/{id}"
+                "related": "https://api.v1.oregonstate.edu/v1/education/offeringAssociations/123"
               },
               "data": {
                 "type": "educationOffering",
@@ -303,7 +328,7 @@
           "relationships": {
             "education": {
               "links": {
-                "related": "{host}{basePath}/educations/{id}"
+                "related": "https://api.v1.oregonstate.edu/v1/education/educations/456"
               },
               "data": {
                 "type": "education",
@@ -374,7 +399,16 @@
     }
     ```
 
-4. `GET /students/{id}?include=degrees,class-schedule`
+4.  A request to get a student resource along with their associated degrees and class-schedules
+
+    This is an example of a student resource with many related resources. Using JSON:API compound
+    documents allows the client to selectively fetch data for a student with a single request. The
+    response also only includes relevant data. In this case, the number of requests to get all
+    student information is reduced from 11 to 1. JSON:API's "full linkage" requirement also ensures
+    that included resources can be parsed in a programmatical way, even if the `included` array
+    becomes large.
+
+    `GET /students/{id}?include=degrees,class-schedule`
 
     ```json
     {
