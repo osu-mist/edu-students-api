@@ -20,6 +20,35 @@ externalDocs:
 produces:
   - application/json
 paths:
+  /students/{osuId}:
+    get:
+      tags:
+        - students
+      description: Get student information
+      operationId: getStudentById
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - $ref: '#/parameters/osuId'
+        - $ref: '#/parameters/include'
+        - $ref: '#/parameters/fields'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/StudentResult'
+        '403':
+          description: One or more resources are forbidden
+          schema:
+            $ref: '#/definitions/ErrorResult'
+        '404':
+          description: Resource not found
+          schema:
+            $ref: '#/definitions/ErrorResult'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResult'
+
   /students/{osuId}/academic-status:
     get:
       tags:
@@ -206,6 +235,10 @@ paths:
             $ref: '#/definitions/ClassScheduleResult'
         '400':
           description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResult'
+        '403':
+          description: One or more resources are forbidden
           schema:
             $ref: '#/definitions/ErrorResult'
         '500':
@@ -399,6 +432,147 @@ parameters:
     collectionFormat: csv
     allowEmptyValue: false
 definitions:
+  StudentResource:
+    properties:
+      type:
+        type: string
+        enum: [student]
+      id:
+        $ref: '#/definitions/StudentId'
+      relationships:
+        properties:
+          academic-statuses:
+            properties:
+              data:
+                type: array
+                items:
+                  properties:
+                    type:
+                      $ref: '#/definitions/AcademicStatusResource/properties/type'
+                    id:
+                      $ref: '#/definitions/AcademicStatusResource/properties/id'
+              links:
+                $ref: '#/definitions/RelatedLink'
+          account-balance:
+            properties:
+              data:
+                properties:
+                  type:
+                    $ref: '#/definitions/AccountBalanceResource/properties/type'
+                  id:
+                    $ref: '#/definitions/AccountBalanceResource/properties/id'
+              links:
+                $ref: '#/definitions/RelatedLink'
+          account-transactions:
+            properties:
+              data:
+                type: array
+                items:
+                  properties:
+                    type:
+                      $ref: '#/definitions/AccountTransactionsResource/properties/type'
+                    id:
+                      $ref: '#/definitions/AccountTransactionsResource/properties/id'
+              links:
+                $ref: '#/definitions/RelatedLink'
+          classification:
+            properties:
+              data:
+                properties:
+                  type:
+                    $ref: '#/definitions/ClassificationResource/properties/type'
+                  id:
+                    $ref: '#/definitions/ClassificationResource/properties/id'
+              links:
+                $ref: '#/definitions/RelatedLink'
+          class-schedules:
+            properties:
+              data:
+                type: array
+                items:
+                  properties:
+                    type:
+                      $ref: '#/definitions/ClassScheduleResource/properties/type'
+                    id:
+                      $ref: '#/definitions/ClassScheduleResource/properties/id'
+              links:
+                $ref: '#/definitions/RelatedLink'
+          degrees:
+            properties:
+              data:
+                type: array
+                items:
+                  properties:
+                    type:
+                      $ref: '#/definitions/DegreeResource/properties/type'
+                    id:
+                      $ref: '#/definitions/DegreeResource/properties/id'
+              links:
+                $ref: '#/definitions/RelatedLink'
+          dual-enrollments:
+            properties:
+              data:
+                type: array
+                items:
+                  properties:
+                    type:
+                      $ref: '#/definitions/DualEnrollmentResource/properties/type'
+                    id:
+                      $ref: '#/definitions/DualEnrollmentResource/properties/id'
+              links:
+                $ref: '#/definitions/RelatedLink'
+          gpa:
+            properties:
+              data:
+                properties:
+                  type:
+                    $ref: '#/definitions/GradePointAverageResource/properties/type'
+                  id:
+                    $ref: '#/definitions/GradePointAverageResource/properties/id'
+              links:
+                $ref: '#/definitions/RelatedLink'
+          grades:
+            properties:
+              data:
+                type: array
+                items:
+                  properties:
+                    type:
+                      $ref: '#/definitions/GradesResource/properties/type'
+                    id:
+                      $ref: '#/definitions/GradesResource/properties/id'
+              links:
+                $ref: '#/definitions/RelatedLink'
+          holds:
+            properties:
+              data:
+                properties:
+                  type:
+                    $ref: '#/definitions/HoldsResource/properties/type'
+                  id:
+                    $ref: '#/definitions/HoldsResource/properties/id'
+              links:
+                $ref: '#/definitions/RelatedLink'
+          work-study:
+            properties:
+              data:
+                properties:
+                  type:
+                    $ref: '#/definitions/WorkStudyResource/properties/type'
+                  id:
+                    $ref: '#/definitions/WorkStudyResource/properties/id'
+              links:
+                $ref: '#/definitions/RelatedLink'
+  StudentResult:
+    properties:
+      links:
+        $ref: '#/definitions/SelfLink'
+      data:
+        $ref: '#/definitions/StudentResource'
+      included:
+        type: array
+        items:
+          type: object
   AcademicStatusResult:
     properties:
       links:
@@ -1275,6 +1449,11 @@ definitions:
       self:
         type: string
         format: url
+  RelatedLink:
+    properties:
+      related:
+        type: string
+        format: uri
   StudentId:
     type: string
     description: Student ID
